@@ -1,5 +1,5 @@
 .-  Instructions for z2w
-.set GIT=https://github.com/imatix/zguide
+.set GIT=https://github.com/imatix/zguide2
 .set BRANCH=master
 .set EMAIL=zeromq-dev@lists.zeromq.org
 .set LIST=http://lists.zeromq.org/mailman/listinfo/zeromq-dev
@@ -57,13 +57,13 @@ We assume you are using the latest 3.2 release of 0MQ. We assume you are using a
 
 +++ Getting the Examples
 
-The Guide examples live in the Guide's [https://github.com/imatix/zguide git repository]. The simplest way to get all the examples is to clone this repository:
+The Guide examples live in the Guide's [https://github.com/imatix/zguide2 git repository]. The simplest way to get all the examples is to clone this repository:
 
 [[code]]
-git clone --depth=1 git://github.com/imatix/zguide.git
+git clone --depth=1 git://github.com/imatix/zguide2.git
 [[/code]]
 
-And then browse the examples subdirectory. You'll find examples by language. If there are examples missing in a language you use, you're encouraged to [http://zguide.zeromq.org/main:translate submit a translation]. This is how the Guide became so useful, thanks to the work of many people. All examples are licensed under MIT/X11.
+And then browse the examples subdirectory. You'll find examples by language. If there are examples missing in a language you use, you're encouraged to [http://zguide2.zeromq.org/main:translate submit a translation]. This is how the Guide became so useful, thanks to the work of many people. All examples are licensed under MIT/X11.
 
 +++ Ask and Ye Shall Receive
 
@@ -191,7 +191,7 @@ s_recv (void *socket) {
 
 This makes a very handy helper function and in the spirit of making things we can reuse profitably, let's write a similar 's_send' function that sends strings in the correct 0MQ format, and package this into a header file we can reuse.
 
-The result is {{zhelpers.h}}, which lets us write sweeter and shorter 0MQ applications in C. It is a fairly long source, and only fun for C developers, so [https://github.com/imatix/zguide/blob/master/examples/C/zhelpers.h read it at leisure].
+The result is {{zhelpers.h}}, which lets us write sweeter and shorter 0MQ applications in C. It is a fairly long source, and only fun for C developers, so [https://github.com/imatix/zguide2/blob/master/examples/C/zhelpers.h read it at leisure].
 
 +++ Version Reporting
 

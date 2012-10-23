@@ -10,7 +10,7 @@ function upload {
     fi
     NEW=`sha1sum $2.wd | cut -f1 -d" "`
     if [ "$NEW" != "$OLD" ]; then
-        wdput zguide $1 $2 "$3"
+        wdput zguide2 $1 $2 "$3"
         if [ -f .cache_$1 ]; then
             egrep -v $2.wd .cache_$1 > x
             mv x .cache_$1

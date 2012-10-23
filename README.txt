@@ -1,4 +1,4 @@
-.set GIT=https://github.com/imatix/zguide
+.set GIT=https://github.com/imatix/zguide2
 .sub 0MQ=ØMQ
 
 0MQ - The Guide
