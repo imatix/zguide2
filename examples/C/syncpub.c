@@ -8,7 +8,7 @@
 
 int main (void)
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
 
     //  Socket to talk to clients
     void *publisher = zmq_socket (context, ZMQ_PUB);
@@ -39,6 +39,6 @@ int main (void)
 
     zmq_close (publisher);
     zmq_close (syncservice);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

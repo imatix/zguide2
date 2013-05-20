@@ -10,7 +10,7 @@ worker_routine (void *context) {
     void *receiver = zmq_socket (context, ZMQ_REP);
     zmq_connect (receiver, "inproc://workers");
 
-    while (true) {
+    while (1) {
         char *string = s_recv (receiver);
         printf ("Received request: [%s]\n", string);
         free (string);
@@ -25,7 +25,7 @@ worker_routine (void *context) {
 
 int main (void)
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
 
     //  Socket to talk to clients
     void *clients = zmq_socket (context, ZMQ_ROUTER);
@@ -41,12 +41,12 @@ int main (void)
         pthread_t worker;
         pthread_create (&worker, NULL, worker_routine, context);
     }
-    //  Connect work threads to client threads via a queue proxy
-    zmq_proxy (clients, workers, NULL);
+    //  Connect work threads to client threads via a queue
+    zmq_device (ZMQ_QUEUE, clients, workers);
 
     //  We never get here but clean up anyhow
     zmq_close (clients);
     zmq_close (workers);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

@@ -6,7 +6,7 @@
 
 int main (void) 
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
 
     //  Socket to receive messages on
     void *receiver = zmq_socket (context, ZMQ_PULL);
@@ -45,6 +45,6 @@ int main (void)
 
     zmq_close (receiver);
     zmq_close (controller);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

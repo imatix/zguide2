@@ -6,7 +6,7 @@
 
 int main (void) 
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
 
     //  Socket to receive messages on
     void *receiver = zmq_socket (context, ZMQ_PULL);
@@ -27,19 +27,19 @@ int main (void)
         { controller, 0, ZMQ_POLLIN, 0 }
     };
     //  Process messages from both sockets
-    while (true) {
+    while (1) {
         zmq_msg_t message;
         zmq_poll (items, 2, -1);
         if (items [0].revents & ZMQ_POLLIN) {
             zmq_msg_init (&message);
-            zmq_msg_recv (&message, receiver, 0);
+            zmq_recv (receiver, &message, 0);
 
             //  Do the work
             s_sleep (atoi ((char *) zmq_msg_data (&message)));
 
             //  Send results to sink
             zmq_msg_init (&message);
-            zmq_msg_send (&message, sender, 0);
+            zmq_send (sender, &message, 0);
 
             //  Simple progress indicator for the viewer
             printf (".");
@@ -55,6 +55,6 @@ int main (void)
     zmq_close (receiver);
     zmq_close (sender);
     zmq_close (controller);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

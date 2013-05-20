@@ -8,7 +8,7 @@
 int main (void) 
 {
     //  Prepare our context and socket
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
     void *receiver = zmq_socket (context, ZMQ_PULL);
     zmq_bind (receiver, "tcp://*:5558");
 
@@ -35,6 +35,6 @@ int main (void)
         (int) (s_clock () - start_time));
 
     zmq_close (receiver);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

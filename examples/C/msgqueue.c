@@ -6,7 +6,7 @@
 
 int main (void) 
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
 
     //  Socket facing clients
     void *frontend = zmq_socket (context, ZMQ_ROUTER);
@@ -18,12 +18,12 @@ int main (void)
     rc = zmq_bind (backend, "tcp://*:5560");
     assert (rc == 0);
 
-    //  Start the proxy
-    zmq_proxy (frontend, backend, NULL);
+    //  Start the device
+    zmq_device (ZMQ_QUEUE, frontend, backend);
 
     //  We never get here...
     zmq_close (frontend);
     zmq_close (backend);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

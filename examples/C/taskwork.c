@@ -9,7 +9,7 @@
 
 int main (void) 
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
 
     //  Socket to receive messages on
     void *receiver = zmq_socket (context, ZMQ_PULL);
@@ -20,7 +20,7 @@ int main (void)
     zmq_connect (sender, "tcp://localhost:5558");
 
     //  Process tasks forever
-    while (true) {
+    while (1) {
         char *string = s_recv (receiver);
         //  Simple progress indicator for the viewer
         fflush (stdout);
@@ -35,6 +35,6 @@ int main (void)
     }
     zmq_close (receiver);
     zmq_close (sender);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

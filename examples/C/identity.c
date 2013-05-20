@@ -7,7 +7,7 @@
 
 int main (void) 
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
 
     void *sink = zmq_socket (context, ZMQ_ROUTER);
     zmq_bind (sink, "inproc://example");
@@ -28,6 +28,6 @@ int main (void)
     zmq_close (sink);
     zmq_close (anonymous);
     zmq_close (identified);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

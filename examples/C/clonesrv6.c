@@ -30,9 +30,9 @@ typedef struct {
     void *collector;            //  Collect updates from clients
     void *subscriber;           //  Get updates from peer
     zlist_t *pending;           //  Pending updates from clients
-    Bool primary;               //  TRUE if we're primary
-    Bool master;                //  TRUE if we're master
-    Bool slave;                 //  TRUE if we're slave
+    bool primary;               //  true if we're primary
+    bool master;                //  true if we're master
+    bool slave;                 //  true if we're slave
 } clonesrv_t;
 
 //  .split main task setup
@@ -56,7 +56,7 @@ int main (int argc, char *argv [])
         bstar_voter (self->bstar, "tcp://*:5556", ZMQ_ROUTER, s_snapshots, self);
         self->port = 5556;
         self->peer = 5566;
-        self->primary = TRUE;
+        self->primary = true;
     }
     else
     if (argc == 2 && streq (argv [1], "-b")) {
@@ -66,7 +66,7 @@ int main (int argc, char *argv [])
         bstar_voter (self->bstar, "tcp://*:5566", ZMQ_ROUTER, s_snapshots, self);
         self->port = 5566;
         self->peer = 5556;
-        self->primary = FALSE;
+        self->primary = false;
     }
     else {
         printf ("Usage: clonesrv4 { -p | -b }\n");
@@ -79,7 +79,7 @@ int main (int argc, char *argv [])
 
     self->ctx = zctx_new ();
     self->pending = zlist_new ();
-    bstar_set_verbose (self->bstar, TRUE);
+    bstar_set_verbose (self->bstar, true);
 
     //  Set up our clone server sockets
     self->publisher = zsocket_new (self->ctx, ZMQ_PUB);
@@ -197,8 +197,8 @@ s_snapshots (zloop_t *loop, zmq_pollitem_t *poller, void *args)
 //  applies them immediately to its kvmap, whereas the slave queues them
 //  as pending:
 
-//  If message was already on pending list, remove it and return TRUE,
-//  else return FALSE.
+//  If message was already on pending list, remove it and return true,
+//  else return false.
 static int
 s_was_pending (clonesrv_t *self, kvmsg_t *kvmsg)
 {
@@ -207,11 +207,11 @@ s_was_pending (clonesrv_t *self, kvmsg_t *kvmsg)
         if (memcmp (kvmsg_uuid (kvmsg),
                     kvmsg_uuid (held), sizeof (uuid_t)) == 0) {
             zlist_remove (self->pending, held);
-            return TRUE;
+            return true;
         }
         held = (kvmsg_t *) zlist_next (self->pending);
     }
-    return FALSE;
+    return false;
 }
 
 static int
@@ -305,8 +305,8 @@ s_new_master (zloop_t *loop, zmq_pollitem_t *unused, void *args)
 {
     clonesrv_t *self = (clonesrv_t *) args;
 
-    self->master = TRUE;
-    self->slave = FALSE;
+    self->master = true;
+    self->slave = false;
 
     //  Stop subscribing to updates
     zmq_pollitem_t poller = { self->subscriber, 0, ZMQ_POLLIN };
@@ -329,8 +329,8 @@ s_new_slave (zloop_t *loop, zmq_pollitem_t *unused, void *args)
     clonesrv_t *self = (clonesrv_t *) args;
 
     zhash_destroy (&self->kvmap);
-    self->master = FALSE;
-    self->slave = TRUE;
+    self->master = false;
+    self->slave = true;
 
     //  Start subscribing to updates
     zmq_pollitem_t poller = { self->subscriber, 0, ZMQ_POLLIN };

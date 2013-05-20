@@ -7,13 +7,13 @@
 
 int main (void) 
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
 
     //  Socket to talk to clients
     void *responder = zmq_socket (context, ZMQ_REP);
     zmq_connect (responder, "tcp://localhost:5560");
 
-    while (true) {
+    while (1) {
         //  Wait for next request from client
         char *string = s_recv (responder);
         printf ("Received request: [%s]\n", string);
@@ -27,6 +27,6 @@ int main (void)
     }
     //  We never get here but clean up anyhow
     zmq_close (responder);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

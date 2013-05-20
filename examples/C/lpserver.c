@@ -11,12 +11,12 @@ int main (void)
 {
     srandom ((unsigned) time (NULL));
 
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
     void *server = zmq_socket (context, ZMQ_REP);
     zmq_bind (server, "tcp://*:5555");
 
     int cycles = 0;
-    while (true) {
+    while (1) {
         char *request = s_recv (server);
         cycles++;
 
@@ -36,6 +36,6 @@ int main (void)
         free (request);
     }
     zmq_close (server);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

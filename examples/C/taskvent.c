@@ -7,7 +7,7 @@
 
 int main (void) 
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
 
     //  Socket to send messages on
     void *sender = zmq_socket (context, ZMQ_PUSH);
@@ -44,6 +44,6 @@ int main (void)
 
     zmq_close (sink);
     zmq_close (sender);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

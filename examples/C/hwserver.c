@@ -10,17 +10,17 @@
 
 int main (void)
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
 
     //  Socket to talk to clients
     void *responder = zmq_socket (context, ZMQ_REP);
     zmq_bind (responder, "tcp://*:5555");
 
-    while (true) {
+    while (1) {
         //  Wait for next request from client
         zmq_msg_t request;
         zmq_msg_init (&request);
-        zmq_msg_recv (&request, responder, 0);
+        zmq_recv (responder, &request, 0);
         printf ("Received Hello\n");
         zmq_msg_close (&request);
 
@@ -31,11 +31,11 @@ int main (void)
         zmq_msg_t reply;
         zmq_msg_init_size (&reply, 5);
         memcpy (zmq_msg_data (&reply), "World", 5);
-        zmq_msg_send (&reply, responder, 0);
+        zmq_send (responder, &reply, 0);
         zmq_msg_close (&reply);
     }
     //  We never get here but if we did, this would be how we end
     zmq_close (responder);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

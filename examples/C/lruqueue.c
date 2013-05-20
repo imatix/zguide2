@@ -18,7 +18,7 @@
 static void *
 client_task (void *args)
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
     void *client = zmq_socket (context, ZMQ_REQ);
     s_set_id (client);          //  Set a printable identity
     zmq_connect (client, "ipc://frontend.ipc");
@@ -29,7 +29,7 @@ client_task (void *args)
     printf ("Client: %s\n", reply);
     free (reply);
     zmq_close (client);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return NULL;
 }
 
@@ -44,7 +44,7 @@ client_task (void *args)
 static void *
 worker_task (void *args)
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
     void *worker = zmq_socket (context, ZMQ_REQ);
     s_set_id (worker);          //  Set a printable identity
     zmq_connect (worker, "ipc://backend.ipc");
@@ -52,7 +52,7 @@ worker_task (void *args)
     //  Tell broker we're ready for work
     s_send (worker, "READY");
 
-    while (true) {
+    while (1) {
         //  Read and save all frames until we get an empty frame
         //  In this example there is only 1 but it could be more
         char *address = s_recv (worker);
@@ -71,7 +71,7 @@ worker_task (void *args)
         free (address);
     }
     zmq_close (worker);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return NULL;
 }
 
@@ -85,7 +85,7 @@ worker_task (void *args)
 int main (void)
 {
     //  Prepare our context and sockets
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
     void *frontend = zmq_socket (context, ZMQ_ROUTER);
     void *backend  = zmq_socket (context, ZMQ_ROUTER);
     zmq_bind (frontend, "ipc://frontend.ipc");
@@ -116,7 +116,7 @@ int main (void)
     int available_workers = 0;
     char *worker_queue [10];
 
-    while (true) {
+    while (1) {
         zmq_pollitem_t items [] = {
             { backend,  0, ZMQ_POLLIN, 0 },
             { frontend, 0, ZMQ_POLLIN, 0 }
@@ -185,6 +185,6 @@ int main (void)
     }
     zmq_close (frontend);
     zmq_close (backend);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

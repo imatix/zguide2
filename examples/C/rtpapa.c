@@ -7,7 +7,7 @@
 //  of events...
 int main (void) 
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
 
     void *client = zmq_socket (context, ZMQ_ROUTER);
     zmq_bind (client, "ipc://routing.ipc");
@@ -39,6 +39,6 @@ int main (void)
 
     zmq_close (client);
     zmq_close (worker);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

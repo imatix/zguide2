@@ -8,16 +8,14 @@
 int main (void)
 {
     //  Prepare our context and publisher
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
     void *publisher = zmq_socket (context, ZMQ_PUB);
-    int rc = zmq_bind (publisher, "tcp://*:5556");
-    assert (rc == 0);
-    rc = zmq_bind (publisher, "ipc://weather.ipc");
-    assert (rc == 0);
+    zmq_bind (publisher, "tcp://*:5556");
+    zmq_bind (publisher, "ipc://weather.ipc");
 
     //  Initialize random number generator
     srandom ((unsigned) time (NULL));
-    while (true) {
+    while (1) {
         //  Get values that will fool the boss
         int zipcode, temperature, relhumidity;
         zipcode     = randof (100000);
@@ -30,6 +28,6 @@ int main (void)
         s_send (publisher, update);
     }
     zmq_close (publisher);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }

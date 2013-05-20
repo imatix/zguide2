@@ -5,7 +5,7 @@
 
 int main (void)
 {
-    void *context = zmq_ctx_new ();
+    void *context = zmq_init (1);
 
     //  First, connect our subscriber socket
     void *subscriber = zmq_socket (context, ZMQ_SUB);
@@ -28,7 +28,7 @@ int main (void)
 
     //  Third, get our updates and report how many we got
     int update_nbr = 0;
-    while (true) {
+    while (1) {
         char *string = s_recv (subscriber);
         if (strcmp (string, "END") == 0) {
             free (string);
@@ -41,6 +41,6 @@ int main (void)
 
     zmq_close (subscriber);
     zmq_close (syncclient);
-    zmq_ctx_destroy (context);
+    zmq_term (context);
     return 0;
 }
