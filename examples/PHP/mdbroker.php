@@ -217,8 +217,8 @@ class Mdbroker {
         }
 
         if(isset($worker->service)) {
-            worker_remove_from_array($worker, $worker->service->waiting);
-            $worker->service->workers--;
+            if (worker_remove_from_array($worker, $worker->service->waiting))
+                $worker->service->workers--;
         }
         worker_remove_from_array($worker, $this->waiting);
         unset($this->workers[$worker->identity]);
@@ -228,7 +228,9 @@ class Mdbroker {
         $index = array_search($worker, $array);
         if ($index !== false) {
             unset($array[$index]);
+            return true;
         }
+        return false;
     }
 
     /**
